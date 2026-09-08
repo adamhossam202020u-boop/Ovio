@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ovio Maadi | Digital Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --flour:#F6F1E8;
+    --paper:#FFFDF8;
+    --ink:#2C2822;
+    --ink-soft:#6B6255;
+    --wine:#6E2A3D;
+    --wine-deep:#4E1D2C;
+    --sage:#71805F;
+    --amber:#C9942F;
+    --line: rgba(44,40,34,0.13);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--flour);
+    color:var(--ink);
+    font-family:'Karla', 'Alexandria', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom: 90px;
+  }
+  ::selection{ background:var(--amber); color:#fff; }
+
+  .browserbar{
+    background:#2C2822;
+    color:#c9c0b2;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 14px;
+  }
+  .browserbar .dots{display:flex; gap:5px;}
+  .browserbar .dots span{width:8px;height:8px;border-radius:50%;background:#5a5347;display:inline-block;}
+  .browserbar .url{
+    flex:1;
+    background:rgba(255,255,255,0.06);
+    border-radius:20px;
+    padding:5px 12px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    justify-content:center;
+    color:#EDE6D8;
+    letter-spacing:0.2px;
+  }
+  .browserbar .url svg{width:11px;height:11px;flex-shrink:0;}
+
+  .pattern{
+    height:10px;
+    background: repeating-linear-gradient(90deg, var(--amber) 0 22px, var(--sage) 22px 44px);
+    opacity:0.85;
+  }
+
+  .hero{
+    background: radial-gradient(120% 100% at 50% -10%, #5c2333 0%, var(--wine-deep) 55%, #35141c 100%);
+    color:#F3E9DB;
+    padding:40px 22px 32px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before, .hero::after{
+    content:"";
+    position:absolute;
+    border:1px solid rgba(243,233,219,0.14);
+    border-radius:50%;
+  }
+  .hero::before{ width:240px; height:240px; right:-100px; top:-120px; }
+  .hero::after{ width:200px; height:200px; left:-100px; bottom:-130px; }
+
+  .badge{
+    display:inline-block;
+    font-size:11.5px;
+    color:#F3E9DB;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.25);
+    padding:4px 14px;
+    border-radius:20px;
+    margin-bottom:18px;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+  }
+
+  .hero-art{ width:130px; height:80px; margin:0 auto 18px; position:relative; z-index:1; }
+  .hero-art svg{ width:100%; height:100%; }
+
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:48px;
+    margin:0 0 6px;
+    letter-spacing:0.5px;
+    position:relative;
+  }
+  .hero p.tag{
+    margin:0 0 22px;
+    font-size:14.5px;
+    color:#E3D4C4;
+    font-weight:300;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+  }
+  .hero .meta{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    font-size:12.5px;
+    color:#F3E9DB;
+    position:relative;
+  }
+  .hero .meta span{ display:flex; align-items:center; gap:5px; opacity:0.92; }
+  .hero .meta svg{width:13px;height:13px;}
+
+  .catnav-wrap{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:var(--flour);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 6px 14px -10px rgba(44,40,34,0.35);
+  }
+  .catnav{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:12px 16px;
+    scrollbar-width:none;
+  }
+  .catnav::-webkit-scrollbar{display:none;}
+  .catnav button{
+    flex:none;
+    font-family:'Karla', 'Alexandria', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.2px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:8px 16px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:background .2s, color .2s, border-color .2s;
+    white-space:nowrap;
+    text-transform:uppercase;
+  }
+  .catnav button.active{
+    background:var(--wine);
+    border-color:var(--wine);
+    color:#fbf3e8;
+  }
+
+  main{ max-width:640px; margin:0 auto; padding:6px 20px 40px; }
+  section.cat{ padding-top:30px; scroll-margin-top:64px; }
+
+  .head{ display:flex; align-items:center; gap:14px; margin-bottom:4px; }
+  .head .titles{ flex:1; min-width:0; }
+  .cat-art{
+    width:56px; height:56px; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:50%; padding:12px;
+  }
+  .cat-art svg{ width:100%; height:100%; }
+
+  section.cat h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:25px;
+    color:var(--wine-deep);
+    margin:0 0 2px;
+  }
+  section.cat .subtitle{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0;
+    font-weight:400;
+  }
+  .rule{
+    height:1px;
+    background:repeating-linear-gradient(90deg, var(--amber) 0 6px, transparent 6px 11px);
+    opacity:0.8;
+    margin:12px 0 18px;
+  }
+
+  .item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .item:last-child{ border-bottom:none; }
+  .item .item-img{
+    width:70px;
+    height:70px;
+    border-radius:12px;
+    object-fit:cover;
+    flex-shrink:0;
+    border:1px solid var(--line);
+  }
+  .item .info{ flex:1; min-width:0; }
+  .item .name{
+    font-family:'Fraunces', serif;
+    font-size:16.5px;
+    font-weight:600;
+    color:var(--ink);
+    margin:0 0 3px;
+  }
+  .item .desc{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-weight:400;
+    line-height:1.5;
+    margin:0;
+  }
+  .ar-title{
+    font-family:'Alexandria', sans-serif;
+    font-size:13.5px;
+    color:var(--wine);
+    margin-left:6px;
+    font-weight:500;
+  }
+  .ar-desc{
+    font-family:'Alexandria', sans-serif;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    display:block;
+    margin-top:2px;
+  }
+  .item-action{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:8px;
+    flex-shrink:0;
+  }
+  .item .price{
+    font-family:'Karla',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--wine);
+    white-space:nowrap;
+  }
+  .item .price::after{ content:" EGP"; font-weight:500; font-size:10.5px; color:var(--ink-soft); }
+
+  /* Cart Controls */
+  .qty-controls{
+    display:flex;
+    align-items:center;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:2px 6px;
+    gap:8px;
+  }
+  .qty-btn{
+    background:none;
+    border:none;
+    color:var(--wine);
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+    width:22px;
+    height:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+  }
+  .qty-btn:active{ background:rgba(110,42,61,0.1); }
+  .qty-count{
+    font-weight:700;
+    font-size:13px;
+    color:var(--ink);
+    min-width:14px;
+    text-align:center;
+  }
+
+  .tagline-strip{
+    margin:34px 0 6px;
+    text-align:center;
+    padding:18px 14px;
+    background:var(--paper);
+    border:1px dashed var(--line);
+    border-radius:14px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .tagline-strip b{ color:var(--sage); }
+
+  footer{
+    background:var(--ink);
+    color:#D9D0C1;
+    padding:34px 22px 26px;
+    text-align:center;
+  }
+  footer h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:24px;
+    color:#F3E9DB;
+    margin:0 0 8px;
+  }
+  footer p{ font-size:12.5px; color:#B7AC98; margin:0 0 18px; line-height:1.7;}
+  .foot-links{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .foot-links a{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12.5px; color:#F3E9DB; text-decoration:none;
+    border:1px solid rgba(243,233,219,0.25);
+    padding:8px 16px; border-radius:20px;
+  }
+  .foot-links a svg{width:13px;height:13px;}
+  .demo-note{
+    margin-top:22px; font-size:11px; color:#8c8272;
+    border-top:1px solid rgba(217,208,193,0.15);
+    padding-top:14px;
+  }
+
+  /* Cart FAB & WhatsApp Bar */
+  .cart-bar{
+    position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+    width:calc(100% - 36px); max-width:500px;
+    background:var(--sage); color:#F3E9DB;
+    border:none; border-radius:30px;
+    padding:12px 20px;
+    font-family:'Alexandria', 'Karla', sans-serif; font-weight:600; font-size:13.5px;
+    display:flex; align-items:center; justify-content:space-between;
+    box-shadow:0 8px 24px -4px rgba(0,0,0,0.45);
+    cursor:pointer; z-index:30;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  .cart-bar:hover{ background:#5f6d4f; }
+  .cart-bar:active{ transform:translateX(-50%) scale(0.98); }
+  .cart-info{ display:flex; align-items:center; gap:10px; }
+  .cart-badge{
+    background:#25D366; color:#ffffff;
+    font-weight:700; font-size:12px;
+    padding:3px 10px; border-radius:14px;
+  }
+
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+  <div class="browserbar">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="url">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c9c0b2" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      oviomaadi.com
+    </div>
+  </div>
+  <div class="pattern"></div>
+
+  <div class="hero">
+    <span class="badge">Demo Preview · معاينة تجريبية</span>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 220 130" fill="none">
+        <ellipse cx="110" cy="115" rx="90" ry="8" fill="#F3E9DB" opacity="0.12"/>
+        <path d="M50 95c0-32 18-58 60-58s60 26 60 58" stroke="#E3B65C" stroke-width="3" stroke-linecap="round"/>
+        <path d="M50 95h120" stroke="#E3B65C" stroke-width="3" stroke-linecap="round"/>
+        <path d="M78 60c8-6 18-8 32-8s24 2 32 8" stroke="#F3E9DB" stroke-width="2" opacity="0.55" stroke-linecap="round"/>
+        <circle cx="94" cy="45" r="3" fill="#E3B65C"/>
+        <circle cx="126" cy="42" r="3" fill="#F3E9DB" opacity="0.8"/>
+        <circle cx="110" cy="52" r="3" fill="#E3B65C"/>
+      </svg>
+    </div>
+    <h1>Ovio</h1>
+    <p class="tag">Modern European Kitchen &amp; Bakery <br><span style="font-size:12.5px; opacity:0.85; text-transform:none;">مطبخ ومخبز أوروبي عصري</span></p>
+    <div class="meta">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F3E9DB" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Daily · 8:00 AM – 12:00 AM · يومياً
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F3E9DB" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Street 18, Maadi Sarayat · المعادي
+      </span>
+    </div>
+  </div>
+
+  <div class="catnav-wrap">
+    <div class="catnav" id="catnav">
+      <button data-target="bakery" class="active">Bakery · مخبوزات</button>
+      <button data-target="brunch">Brunch · إفطار</button>
+      <button data-target="pizza">Pizza · بيتزا</button>
+      <button data-target="pasta">Pasta · باستا</button>
+      <button data-target="mains">Mains · أطباق رئيسية</button>
+    </div>
+  </div>
+
+  <main>
+
+    <section class="cat" id="bakery">
+      <div class="head">
+        <div class="cat-art">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 26c0-9 7-16 16-16s16 7 16 16-7 10-16 10-16-1-16-10z" stroke="#6E2A3D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M16 20c1.5 2 1.5 5 0 7M24 17c1.5 2 1.5 6 0 8M32 20c1.5 2 1.5 5 0 7" stroke="#C9942F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="titles">
+          <h2>Artisan Bakery <span class="ar-title">المخبوزات الحرفية</span></h2>
+          <p class="subtitle">Baked fresh in-house, every morning · يُخبز طازجاً كل صباح</p>
+        </div>
+      </div>
+      <div class="rule"></div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=200&q=80" alt="Sourdough Loaf">
+        <div class="info">
+          <p class="name">Sourdough Loaf <span class="ar-title">خبز الصوردو</span></p>
+          <p class="desc">48-hour fermented, crisp crust, open crumb <span class="ar-desc">مخمر لمدة 48 ساعة، قشرة مقرمشة وطرية من الداخل</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">120</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('sourdough', 'Sourdough Loaf (خبز الصوردو)', 120, -1)">-</button>
+            <span class="qty-count" id="qty-sourdough">0</span>
+            <button class="qty-btn" onclick="updateQty('sourdough', 'Sourdough Loaf (خبز الصوردو)', 120, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=200&q=80" alt="Butter Croissant">
+        <div class="info">
+          <p class="name">Butter Croissant <span class="ar-title">كرواسون بالزبدة</span></p>
+          <p class="desc">Laminated French-style, baked to order <span class="ar-desc">على الطريقة الفرنسية بالزبدة الفاخرة، يخبز عند الطلب</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">65</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('croissant', 'Butter Croissant (كرواسون زبدة)', 65, -1)">-</button>
+            <span class="qty-count" id="qty-croissant">0</span>
+            <button class="qty-btn" onclick="updateQty('croissant', 'Butter Croissant (كرواسون زبدة)', 65, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=200&q=80" alt="Pain au Chocolat">
+        <div class="info">
+          <p class="name">Pain au Chocolat <span class="ar-title">بان أو شوكولا</span></p>
+          <p class="desc">Dark chocolate batons in buttery layers <span class="ar-desc">قطع الشوكولاتة الداكنة داخل طبقات الكرواسون الهشة</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">75</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('pain-choc', 'Pain au Chocolat (بان أو شوكولا)', 75, -1)">-</button>
+            <span class="qty-count" id="qty-pain-choc">0</span>
+            <button class="qty-btn" onclick="updateQty('pain-choc', 'Pain au Chocolat (بان أو شوكولا)', 75, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&q=80" alt="Cinnamon Roll">
+        <div class="info">
+          <p class="name">Cinnamon Roll <span class="ar-title">سينامون رول</span></p>
+          <p class="desc">Cream cheese glaze, served warm <span class="ar-desc">مع صوص الجبنة الكريمية الغني، يُقدم دافئاً</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">80</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('cinnamon', 'Cinnamon Roll (سينامون رول)', 80, -1)">-</button>
+            <span class="qty-count" id="qty-cinnamon">0</span>
+            <button class="qty-btn" onclick="updateQty('cinnamon', 'Cinnamon Roll (سينامون رول)', 80, 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cat" id="brunch">
+      <div class="head">
+        <div class="cat-art">
+          <svg viewBox="0 0 48 48" fill="none">
+            <ellipse cx="24" cy="34" rx="16" ry="4" fill="#C9942F" opacity="0.2"/>
+            <path d="M10 20a14 14 0 0 0 28 0" stroke="#6E2A3D" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M14 12c1-3 3-3 4 0M22 10c1-3 3-3 4 0M30 12c1-3 3-3 4 0" stroke="#71805F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="titles">
+          <h2>Breakfast &amp; Brunch <span class="ar-title">الإفطار والبرانش</span></h2>
+          <p class="subtitle">Cairo's favourite brunch table, all day · وجبات الإفطار طوال اليوم</p>
+        </div>
+      </div>
+      <div class="rule"></div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=200&q=80" alt="Belgian Chocolate Pancakes">
+        <div class="info">
+          <p class="name">Belgian Pancakes <span class="ar-title">بان كيك بلجيكي</span></p>
+          <p class="desc">Stacked pancakes, warm chocolate sauce, berries <span class="ar-desc">طبقات البان كيك مع صوص الشوكولاتة الدافئ والفواكه</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">210</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('pancakes', 'Belgian Pancakes (بان كيك بلجيكي)', 210, -1)">-</button>
+            <span class="qty-count" id="qty-pancakes">0</span>
+            <button class="qty-btn" onclick="updateQty('pancakes', 'Belgian Pancakes (بان كيك بلجيكي)', 210, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=200&q=80" alt="Avocado Toast with Feta">
+        <div class="info">
+          <p class="name">Avocado Toast <span class="ar-title">توست الأفوكادو</span></p>
+          <p class="desc">Sourdough, whipped feta, chili oil, radish <span class="ar-desc">خبز صوردو، جبنة فيتا مخفوقة، زيت فلفل حار، وفجل</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">195</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('avocado-toast', 'Avocado Toast (توست الأفوكادو)', 195, -1)">-</button>
+            <span class="qty-count" id="qty-avocado-toast">0</span>
+            <button class="qty-btn" onclick="updateQty('avocado-toast', 'Avocado Toast (توست الأفوكادو)', 195, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=200&q=80" alt="Smoked Salmon Bagel">
+        <div class="info">
+          <p class="name">Salmon Bagel <span class="ar-title">باجل سالمون</span></p>
+          <p class="desc">Cream cheese, capers, red onion, dill <span class="ar-desc">جبنة كريمية، كابري، بصل أحمر وشبت</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">240</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('salmon-bagel', 'Salmon Bagel (باجل السالمون)', 240, -1)">-</button>
+            <span class="qty-count" id="qty-salmon-bagel">0</span>
+            <button class="qty-btn" onclick="updateQty('salmon-bagel', 'Salmon Bagel (باجل السالمون)', 240, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=200&q=80" alt="Eggs Benedict">
+        <div class="info">
+          <p class="name">Eggs Benedict <span class="ar-title">إيجز بينيديكت</span></p>
+          <p class="desc">Poached eggs, hollandaise, brioche muffin <span class="ar-desc">بيض بوشيه، صوص هولنديز، مافن بريوش</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">190</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('eggs-benedict', 'Eggs Benedict (إيجز بينيديكت)', 190, -1)">-</button>
+            <span class="qty-count" id="qty-eggs-benedict">0</span>
+            <button class="qty-btn" onclick="updateQty('eggs-benedict', 'Eggs Benedict (إيجز بينيديكت)', 190, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&q=80" alt="Signature Coffee">
+        <div class="info">
+          <p class="name">Signature Coffee <span class="ar-title">قهوة خاصة</span></p>
+          <p class="desc">Latte, cappuccino, or flat white <span class="ar-desc">لاتيه، كابتشينو، أو فلات وايت</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">85</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('coffee', 'Signature Coffee (قهوة خاصة)', 85, -1)">-</button>
+            <span class="qty-count" id="qty-coffee">0</span>
+            <button class="qty-btn" onclick="updateQty('coffee', 'Signature Coffee (قهوة خاصة)', 85, 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cat" id="pizza">
+      <div class="head">
+        <div class="cat-art">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 8L42 40H6L24 8z" stroke="#6E2A3D" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="24" cy="24" r="2.4" fill="#C9942F"/>
+            <circle cx="19" cy="31" r="2.4" fill="#71805F"/>
+            <circle cx="29" cy="31" r="2.4" fill="#C9942F"/>
+          </svg>
+        </div>
+        <div class="titles">
+          <h2>Pizza <span class="ar-title">البيتزا</span></h2>
+          <p class="subtitle">Thin crust, wood-fired style · عجينة رفيعة على الحطب</p>
+        </div>
+      </div>
+      <div class="rule"></div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=200&q=80" alt="Margherita">
+        <div class="info">
+          <p class="name">Margherita <span class="ar-title">مارجريتا</span></p>
+          <p class="desc">San Marzano tomato, fior di latte, basil <span class="ar-desc">طماطم سان مارزانو، جبنة فيور دي لاتيه، ريحان طازج</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">180</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('margherita', 'Margherita Pizza (مارجريتا)', 180, -1)">-</button>
+            <span class="qty-count" id="qty-margherita">0</span>
+            <button class="qty-btn" onclick="updateQty('margherita', 'Margherita Pizza (مارجريتا)', 180, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&q=80" alt="Truffle Mushroom">
+        <div class="info">
+          <p class="name">Truffle Mushroom <span class="ar-title">مشروم وترافل</span></p>
+          <p class="desc">Wild mushroom, truffle cream, parmesan <span class="ar-desc">مشروم بري، كريمة الترافل، وجبنة بارميزان</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">250</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('truffle-pizza', 'Truffle Mushroom Pizza (مشروم وترافل)', 250, -1)">-</button>
+            <span class="qty-count" id="qty-truffle-pizza">0</span>
+            <button class="qty-btn" onclick="updateQty('truffle-pizza', 'Truffle Mushroom Pizza (مشروم وترافل)', 250, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=200&q=80" alt="Prosciutto &amp; Arugula">
+        <div class="info">
+          <p class="name">Prosciutto Pizza <span class="ar-title">بروشوتو مع جرجير</span></p>
+          <p class="desc">Mozzarella, rocket, shaved parmesan <span class="ar-desc">موزاريلا، جرجير طازج، وشرائح جبن بارميزان</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">230</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('prosciutto-pizza', 'Prosciutto Pizza (بروشوتو)', 230, -1)">-</button>
+            <span class="qty-count" id="qty-prosciutto-pizza">0</span>
+            <button class="qty-btn" onclick="updateQty('prosciutto-pizza', 'Prosciutto Pizza (بروشوتو)', 230, 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cat" id="pasta">
+      <div class="head">
+        <div class="cat-art">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 30c8-14 24-14 32 0" stroke="#6E2A3D" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M12 30c6-10 18-10 24 0" stroke="#C9942F" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <path d="M8 30h32" stroke="#71805F" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="titles">
+          <h2>Pasta <span class="ar-title">الباستا</span></h2>
+          <p class="subtitle">Fresh-made daily · باستا طازجة تُعد يومياً</p>
+        </div>
+      </div>
+      <div class="rule"></div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1621996346565-e3d5d6281216?w=200&q=80" alt="Mushroom &amp; Truffle Pasta">
+        <div class="info">
+          <p class="name">Truffle Pasta <span class="ar-title">باستا المشروم والترافل</span></p>
+          <p class="desc">Tagliatelle, wild mushroom, truffle cream <span class="ar-desc">تالياتيلي، مشروم بري، كريمة الترافل الغنية</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">240</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('truffle-pasta', 'Truffle Pasta (باستا ترافل)', 240, -1)">-</button>
+            <span class="qty-count" id="qty-truffle-pasta">0</span>
+            <button class="qty-btn" onclick="updateQty('truffle-pasta', 'Truffle Pasta (باستا ترافل)', 240, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=200&q=80" alt="Pasta alla Vodka">
+        <div class="info">
+          <p class="name">Pasta alla Vodka <span class="ar-title">باستا الصوص الوردي</span></p>
+          <p class="desc">Penne, tomato-vodka cream sauce, parmesan <span class="ar-desc">بيني مع صوص الكريمة والطماطم الشهير وجبن البارميزان</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">210</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('vodka-pasta', 'Pasta alla Vodka (باستا بينك صوص)', 210, -1)">-</button>
+            <span class="qty-count" id="qty-vodka-pasta">0</span>
+            <button class="qty-btn" onclick="updateQty('vodka-pasta', 'Pasta alla Vodka (باستا بينك صوص)', 210, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=200&q=80" alt="Spaghetti Bolognese">
+        <div class="info">
+          <p class="name">Spaghetti Bolognese <span class="ar-title">سباجيتي بولونيز</span></p>
+          <p class="desc">Slow-cooked beef ragù, parmesan <span class="ar-desc">لحم مفروم مطهو ببطء على الطريقة الإيطالية مع بارميزان</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">195</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('bolognese', 'Spaghetti Bolognese (سباجيتي بولونيز)', 195, -1)">-</button>
+            <span class="qty-count" id="qty-bolognese">0</span>
+            <button class="qty-btn" onclick="updateQty('bolognese', 'Spaghetti Bolognese (سباجيتي بولونيز)', 195, 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cat" id="mains">
+      <div class="head">
+        <div class="cat-art">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M9 39L39 9" stroke="#6E2A3D" stroke-width="2.5" stroke-linecap="round"/>
+            <ellipse cx="16" cy="32" rx="7" ry="5" fill="#C9942F"/>
+            <path d="M30 10l6 6M27 13l6 6" stroke="#71805F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="titles">
+          <h2>Signature Mains <span class="ar-title">الأطباق الرئيسية</span></h2>
+          <p class="subtitle">The restaurant's most-loved plates · الأطباق الأكثر طلباً</p>
+        </div>
+      </div>
+      <div class="rule"></div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1544025162-d76694265947?w=200&q=80" alt="Beef Stroganoff">
+        <div class="info">
+          <p class="name">Beef Stroganoff <span class="ar-title">بيف ستروجانوف</span></p>
+          <p class="desc">Tender beef strips, mushroom cream sauce, rice <span class="ar-desc">شرائح اللحم البقري مع صوص المشروم الكريمي والأرز</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">320</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('stroganoff', 'Beef Stroganoff (بيف ستروجانوف)', 320, -1)">-</button>
+            <span class="qty-count" id="qty-stroganoff">0</span>
+            <button class="qty-btn" onclick="updateQty('stroganoff', 'Beef Stroganoff (بيف ستروجانوف)', 320, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1558030006-450675393462?w=200&q=80" alt="Fillet Mignon">
+        <div class="info">
+          <p class="name">Fillet Mignon <span class="ar-title">فيليه مينيون</span></p>
+          <p class="desc">Grilled to order, choice of sauce, side of the day <span class="ar-desc">شرائح فيليه مشوية حسب طلبك مع صوص وطبق جانبي</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">420</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('fillet', 'Fillet Mignon (فيليه مينيون)', 420, -1)">-</button>
+            <span class="qty-count" id="qty-fillet">0</span>
+            <button class="qty-btn" onclick="updateQty('fillet', 'Fillet Mignon (فيليه مينيون)', 420, 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="item">
+        <img class="item-img" src="https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=200&q=80" alt="Chicken Cordon Bleu">
+        <div class="info">
+          <p class="name">Chicken Cordon Bleu <span class="ar-title">كوردون بلو</span></p>
+          <p class="desc">Ham &amp; gruyère stuffed chicken breast, mash <span class="ar-desc">صدور دجاج محشوة بالتركيو جبن الجرويير مع بطاطس مهروسة</span></p>
+        </div>
+        <div class="item-action">
+          <div class="price">280</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateQty('cordon-bleu', 'Chicken Cordon Bleu (كوردون بلو)', 280, -1)">-</button>
+            <span class="qty-count" id="qty-cordon-bleu">0</span>
+            <button class="qty-btn" onclick="updateQty('cordon-bleu', 'Chicken Cordon Bleu (كوردون بلو)', 280, 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tagline-strip">
+      This is a <b>demo preview</b> of Ovio's digital menu — items and prices are illustrative and fully editable to match the real menu.
+      <br><span style="font-size:11.5px; opacity:0.85; margin-top:4px; display:inline-block;">هذه معاينة تجريبية لمنيو أوفيو الذكي — الأصناف والأسعار توضيحية وقابلة للتعديل بالكامل.</span>
+    </div>
+
+  </main>
+
+  <footer>
+    <h3>Ovio</h3>
+    <p>Street 18, Maadi Sarayat, Cairo<br>Open daily 8:00 AM – 12:00 AM · Family &amp; pet friendly<br>This is a demo mockup — not yet an official page for the restaurant.</p>
+    <div class="foot-links">
+      <a href="https://wa.me/201022231095" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F3E9DB" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        WhatsApp · واتساب
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F3E9DB" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        Instagram
+      </a>
+    </div>
+    <div class="demo-note">Demo mockup for a Smart QR Menu concept — not officially affiliated with the restaurant's management.</div>
+  </footer>
+
+  <!-- Floating WhatsApp Cart Button -->
+  <button class="cart-bar" id="cartBar" onclick="sendWhatsAppOrder()">
+    <div class="cart-info">
+      <span class="cart-badge" id="cartCount">0 أطباق</span>
+      <span id="cartTotalText">السلة فارغة</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:6px;">
+      <span>إرسال الطلب عبر WhatsApp</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+    </div>
+  </button>
+
+<script>
+  // Navigation Smooth Scroll
+  const buttons = document.querySelectorAll('#catnav button');
+  const sections = Array.from(buttons).map(b => document.getElementById(b.dataset.target));
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const el = document.getElementById(btn.dataset.target);
+      const y = el.getBoundingClientRect().top + window.scrollY - 58;
+      window.scrollTo({top: y, behavior: 'smooth'});
+    });
+  });
+
+  const setActive = (id) => {
+    buttons.forEach(b => b.classList.toggle('active', b.dataset.target === id));
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id); });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(s => s && observer.observe(s));
+
+  // Cart & WhatsApp System
+  const RESTAURANT_PHONE = "201022231095";
+  let cart = {};
+
+  function updateQty(id, name, price, change) {
+    if (!cart[id]) {
+      cart[id] = { name: name, price: price, qty: 0 };
+    }
+
+    cart[id].qty += change;
+
+    if (cart[id].qty <= 0) {
+      delete cart[id];
+      document.getElementById(`qty-${id}`).innerText = 0;
+    } else {
+      document.getElementById(`qty-${id}`).innerText = cart[id].qty;
+    }
+
+    renderCartBar();
+  }
+
+  function renderCartBar() {
+    let totalItems = 0;
+    let totalPrice = 0;
+
+    for (let id in cart) {
+      totalItems += cart[id].qty;
+      totalPrice += cart[id].qty * cart[id].price;
+    }
+
+    const countElem = document.getElementById('cartCount');
+    const totalElem = document.getElementById('cartTotalText');
+
+    if (totalItems > 0) {
+      countElem.innerText = `${totalItems} أطباق`;
+      totalElem.innerText = `الإجمالي: ${totalPrice} EGP`;
+    } else {
+      countElem.innerText = `0 أطباق`;
+      totalElem.innerText = `السلة فارغة`;
+    }
+  }
+
+  function sendWhatsAppOrder() {
+    const cartKeys = Object.keys(cart);
+    if (cartKeys.length === 0) {
+      alert('السلة فارغة! برجاء اختيار بعض الأطباق بالضغط على (+) أولاً.');
+      return;
+    }
+
+    let message = "مرحباً مطعم أوفيو المعادي 👋\nأود طلب الآتي من المنيو الذكي:\n\n";
+    let totalPrice = 0;
+
+    cartKeys.forEach(id => {
+      const item = cart[id];
+      const itemTotal = item.qty * item.price;
+      totalPrice += itemTotal;
+      message += `• ${item.name}\n  الكمية: ${item.qty} × ${item.price} = ${itemTotal} EGP\n\n`;
+    });
+
+    message += `------------------------------\n`;
+    message += `💰 إجمالي الحساب: ${totalPrice} EGP`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${RESTAURANT_PHONE}?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+  }
+</script>
+
+</body>
+</html>
